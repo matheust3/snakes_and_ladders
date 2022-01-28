@@ -18,6 +18,8 @@ class GameStore extends NotifierStore<Failure, GameState> {
   void setBluePlayerPosition(int pos) => update(state.copyWith(bluePlayerPosition: pos));
   void setRedPlayerPosition(int pos) => update(state.copyWith(redPlayerPosition: pos));
 
+  void setBlueTurn(bool v) => update(state.copyWith(isBlueTurn: v));
+
   Future<void> play() async {
     final dice1 = sl<RollDiceScreenStore>().state.diceValue1;
     final dice2 = sl<RollDiceScreenStore>().state.diceValue2;
