@@ -1,10 +1,11 @@
 import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter_snakes_and_ladders/core/failures.dart';
+import 'package:flutter_snakes_and_ladders/core/injection_container.dart';
+import 'package:flutter_snakes_and_ladders/game/game_store.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 part 'roll_dice_screen_state.dart';
@@ -17,6 +18,7 @@ class RollDiceScreenStore extends NotifierStore<Failure, RollDiceScreenState> {
           diceValue1: 0,
           diceValue2: 0,
           showDices: false,
+          showSameDicesMessage: false,
         )) {
     animationController.onCompleted = (animationName) {
       if (animationName == 'roll') {
@@ -28,12 +30,22 @@ class RollDiceScreenStore extends NotifierStore<Failure, RollDiceScreenState> {
   final _SimpleAnimations animationController;
 
   Future<void> rollDices() async {
-    update(state.copyWith(rollDices: true, showDices: false));
+    update(state.copyWith(rollDices: true, showDices: false, showSameDicesMessage: false));
   }
 
   Future<void> showDices() async {
     _getDicesValues();
-    update(state.copyWith(rollDices: false, showDices: true));
+    if (state.diceValue1 == state.diceValue2) {
+      update(state.copyWith(rollDices: false, showDices: false, showSameDicesMessage: true));
+    } else {
+      update(state.copyWith(rollDices: false, showDices: true, showSameDicesMessage: false));
+      await Future.delayed(const Duration(seconds: 2));
+      sl<GameStore>().play();
+    }
+  }
+
+  void play() {
+    sl<GameStore>().play();
   }
 
   // Randomly set values ​​for indices
