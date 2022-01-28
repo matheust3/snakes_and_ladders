@@ -65,6 +65,37 @@ class _RollDiceScreenState extends State<RollDiceScreen> {
                 ],
               ),
             );
+          } else if (state.showSameDicesMessage) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Woow, que sorte!\nVocê ganhou mais uma jogada!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(child: Image.asset('assets/images/dice_${state.diceValue1}.png')),
+                      Flexible(child: Image.asset('assets/images/dice_${state.diceValue2}.png')),
+                    ],
+                  ),
+                  Text(
+                    '+${state.diceValue1 + state.diceValue2}',
+                    style: const TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: store.play,
+                    child: const Text('Continuar'),
+                  ),
+                ],
+              ),
+            );
           } else {
             return Container();
           }
