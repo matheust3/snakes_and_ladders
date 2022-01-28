@@ -77,7 +77,7 @@ class _AlertScreenState extends State<AlertScreen> {
                           fontSize: 30,
                         ),
                       ),
-                      Text('Para onde ela vai leva?'),
+                      Text('Para onde ela vai levar?'),
                     ],
                   ),
                 ),
