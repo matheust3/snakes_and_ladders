@@ -27,7 +27,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
     SpriteComponent avatar = SpriteComponent()
       ..anchor = Anchor.topCenter
       ..sprite = await loadSprite('avatar_red.png')
-      ..size = Vector2(size.x * 0.05, size.y * 0.045)
+      ..size = Vector2(size.x * 0.05, size.y * 0.035)
       ..position = Vector2(size.x * 0.5, 40);
 
     add(background);
