@@ -128,6 +128,59 @@ class _AlertScreenState extends State<AlertScreen> {
               ],
             ),
           );
+        } else if (state.showEndGameMessage) {
+          return Container(
+            color: Colors.black87,
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'O jogo acabou!',
+                        style: TextStyle(
+                          color: sl<GameStore>().state.bluePlayerPosition == 100 ? Colors.blue : Colors.red,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 70,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Ok'),
+                      onPressed: () => store.showEndGameMessage(false),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 120,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Jogar novamente'),
+                      onPressed: () => store.restart(),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 70,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Voltar'),
+                      onPressed: () => store.showEndGameMessage(false),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         } else {
           return Container();
         }

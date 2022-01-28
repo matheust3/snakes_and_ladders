@@ -54,94 +54,101 @@ class CobrasEscadas extends FlameGame with HasTappables {
   Future<void> jogar(int dado1, int dado2) async {
     // dado1 = 100;
     // dado2 = 0;
-    if (gameStore.state.movingAvatar) return;
-    gameStore.setMovingAvatar(true);
-    overlays.remove('roll_dices_screen');
-    // A proxima posicao
-    int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
-    int nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
-    // Spawna o avatar do jogado se ele esta na posicao zero
-    if (dado1 + dado2 == nextPosition) {
-      lastPosition = 1;
-      if (gameStore.state.isBlueTurn) {
-        gameStore.avatarBlue.position = boardToPosition(1);
-        add(gameStore.avatarBlue);
-      } else {
-        gameStore.avatarRed.position = boardToPosition(1);
-        add(gameStore.avatarRed);
-      }
-    }
-    // Move o avatar do jogador, casa por casa
-    for (int i = lastPosition + 1; i <= nextPosition; i++) {
-      int currentPosition = i;
-      if (currentPosition > 100) {
-        currentPosition = 100 - (currentPosition - 100);
-      }
-      if (gameStore.state.isBlueTurn) {
-        sl<GameUiStore>().setBluePosition(currentPosition);
-        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
-        gameStore.avatarBlue.add(jumpEffect);
-      } else {
-        sl<GameUiStore>().setRedPosition(currentPosition);
-        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
-        gameStore.avatarRed.add(jumpEffect);
-      }
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    // Ajusta a posicao se ela for maior que 100
-    if (nextPosition > 100) {
-      nextPosition = 100 - (nextPosition - 100);
-    }
-    // Salva a posicao do jogador
-    if (gameStore.state.isBlueTurn) {
-      gameStore.setBluePlayerPosition(nextPosition);
-    } else {
-      gameStore.setRedPlayerPosition(nextPosition);
-    }
-    // Checa se encontrou a cabeca de uma cobra
-    if (snakeHeadMap.containsKey(nextPosition)) {
-      await sl<AlertScreenStore>().showSnakeMessage(true);
-      if (gameStore.state.isBlueTurn) {
-        gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
-        gameStore.setBluePlayerPosition(snakeHeadMap[nextPosition]!);
-      } else {
-        gameStore.avatarRed.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
-        gameStore.setRedPlayerPosition(snakeHeadMap[nextPosition]!);
-      }
-    }
-    // Checa se encontrou a base de uma escada
-    if (laddersMap.containsKey(nextPosition)) {
-      await sl<AlertScreenStore>().showLadderMessage(true);
-      if (gameStore.state.isBlueTurn) {
-        gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
-        gameStore.setBluePlayerPosition(laddersMap[nextPosition]!);
-      } else {
-        gameStore.avatarRed.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
-        gameStore.setRedPlayerPosition(laddersMap[nextPosition]!);
-      }
-    }
-    // Ajusta os avatares se os dois jogadores estiverem na msm posicao
-    if (gameStore.state.redPlayerPosition == gameStore.state.bluePlayerPosition) {
-      gameStore.avatarRed.add(MoveEffect.to(gameStore.avatarRed.position + (boardSteps / 4), EffectController(duration: 0.7)));
-      gameStore.avatarBlue.add(MoveEffect.to(gameStore.avatarBlue.position - (boardSteps / 4), EffectController(duration: 0.7)));
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    // Seta a posicao final (pode ter subido uma escada ou engolido por uma cobra)
-    if (gameStore.state.isBlueTurn) {
-      sl<GameUiStore>().setBluePosition(gameStore.state.bluePlayerPosition);
-    } else {
-      sl<GameUiStore>().setRedPosition(gameStore.state.redPlayerPosition);
-    }
 
-    if (gameStore.state.bluePlayerPosition == 100 || gameStore.state.redPlayerPosition == 100) {
-      await sl<AlertScreenStore>().showWinMessage(true);
-    } else
-    // Se os dados forem nao forem iguais, passa vez
-    if (dado1 != dado2) {
-      gameStore.setBlueTurn(!gameStore.state.isBlueTurn);
-      sl<GameUiStore>().setBlueTurn(gameStore.state.isBlueTurn);
+    overlays.remove('roll_dices_screen');
+    if (gameStore.state.movingAvatar) {
+      return;
+    } else if (gameStore.state.hasWin) {
+      await sl<AlertScreenStore>().showEndGameMessage(true);
+    } else {
+      gameStore.setMovingAvatar(true);
+      // A proxima posicao
+      int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
+      int nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
+      // Spawna o avatar do jogado se ele esta na posicao zero
+      if (dado1 + dado2 == nextPosition) {
+        lastPosition = 1;
+        if (gameStore.state.isBlueTurn) {
+          gameStore.avatarBlue.position = boardToPosition(1);
+          add(gameStore.avatarBlue);
+        } else {
+          gameStore.avatarRed.position = boardToPosition(1);
+          add(gameStore.avatarRed);
+        }
+      }
+      // Move o avatar do jogador, casa por casa
+      for (int i = lastPosition + 1; i <= nextPosition; i++) {
+        int currentPosition = i;
+        if (currentPosition > 100) {
+          currentPosition = 100 - (currentPosition - 100);
+        }
+        if (gameStore.state.isBlueTurn) {
+          sl<GameUiStore>().setBluePosition(currentPosition);
+          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
+          gameStore.avatarBlue.add(jumpEffect);
+        } else {
+          sl<GameUiStore>().setRedPosition(currentPosition);
+          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
+          gameStore.avatarRed.add(jumpEffect);
+        }
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      // Ajusta a posicao se ela for maior que 100
+      if (nextPosition > 100) {
+        nextPosition = 100 - (nextPosition - 100);
+      }
+      // Salva a posicao do jogador
+      if (gameStore.state.isBlueTurn) {
+        gameStore.setBluePlayerPosition(nextPosition);
+      } else {
+        gameStore.setRedPlayerPosition(nextPosition);
+      }
+      // Checa se encontrou a cabeca de uma cobra
+      if (snakeHeadMap.containsKey(nextPosition)) {
+        await sl<AlertScreenStore>().showSnakeMessage(true);
+        if (gameStore.state.isBlueTurn) {
+          gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
+          gameStore.setBluePlayerPosition(snakeHeadMap[nextPosition]!);
+        } else {
+          gameStore.avatarRed.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
+          gameStore.setRedPlayerPosition(snakeHeadMap[nextPosition]!);
+        }
+      }
+      // Checa se encontrou a base de uma escada
+      if (laddersMap.containsKey(nextPosition)) {
+        await sl<AlertScreenStore>().showLadderMessage(true);
+        if (gameStore.state.isBlueTurn) {
+          gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
+          gameStore.setBluePlayerPosition(laddersMap[nextPosition]!);
+        } else {
+          gameStore.avatarRed.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
+          gameStore.setRedPlayerPosition(laddersMap[nextPosition]!);
+        }
+      }
+      // Ajusta os avatares se os dois jogadores estiverem na msm posicao
+      if (gameStore.state.redPlayerPosition == gameStore.state.bluePlayerPosition) {
+        gameStore.avatarRed.add(MoveEffect.to(gameStore.avatarRed.position + (boardSteps / 4), EffectController(duration: 0.7)));
+        gameStore.avatarBlue.add(MoveEffect.to(gameStore.avatarBlue.position - (boardSteps / 4), EffectController(duration: 0.7)));
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      // Seta a posicao final (pode ter subido uma escada ou engolido por uma cobra)
+      if (gameStore.state.isBlueTurn) {
+        sl<GameUiStore>().setBluePosition(gameStore.state.bluePlayerPosition);
+      } else {
+        sl<GameUiStore>().setRedPosition(gameStore.state.redPlayerPosition);
+      }
+
+      if (gameStore.state.bluePlayerPosition == 100 || gameStore.state.redPlayerPosition == 100) {
+        await sl<AlertScreenStore>().showWinMessage(true);
+        gameStore.setWin();
+      } else
+      // Se os dados forem nao forem iguais, passa vez
+      if (dado1 != dado2) {
+        gameStore.setBlueTurn(!gameStore.state.isBlueTurn);
+        sl<GameUiStore>().setBlueTurn(gameStore.state.isBlueTurn);
+      }
+      gameStore.setMovingAvatar(false);
     }
-    gameStore.setMovingAvatar(false);
   }
 
   Vector2 boardToPosition(int boardPosition) {
