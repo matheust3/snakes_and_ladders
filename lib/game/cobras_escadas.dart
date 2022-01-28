@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flutter_snakes_and_ladders/core/injection_container.dart';
 import 'package:flutter_snakes_and_ladders/game/game_store.dart';
 import 'package:flutter_snakes_and_ladders/game_effects/jump_effect.dart';
+import 'package:flutter_snakes_and_ladders/overlays/alert_screen/alert_screen_store.dart';
 import 'package:flutter_snakes_and_ladders/overlays/game_ui/game_ui_store.dart';
 
 class CobrasEscadas extends FlameGame with HasTappables {
@@ -51,6 +52,8 @@ class CobrasEscadas extends FlameGame with HasTappables {
   }
 
   Future<void> jogar(int dado1, int dado2) async {
+    dado1 = 16;
+    dado2 = 0;
     if (gameStore.state.movingAvatar) return;
     gameStore.setMovingAvatar(true);
     overlays.remove('roll_dices_screen');
@@ -97,6 +100,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
     }
     // Checa se encontrou a cabeca de uma cobra
     if (snakeHeadMap.containsKey(nextPosition)) {
+      await sl<AlertScreenStore>().showSnakeMessage(true);
       if (gameStore.state.isBlueTurn) {
         gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
         gameStore.setBluePlayerPosition(snakeHeadMap[nextPosition]!);
