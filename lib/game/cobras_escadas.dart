@@ -52,6 +52,8 @@ class CobrasEscadas extends FlameGame with HasTappables {
 
   Future<void> jogar(int dado1, int dado2) async {
     overlays.remove('roll_dices_screen');
+    dado1 = 7;
+    dado2 = 0;
     // A proxima posicao
     int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
     final nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
