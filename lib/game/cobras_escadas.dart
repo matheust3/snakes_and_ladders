@@ -8,6 +8,9 @@ import 'package:flutter_snakes_and_ladders/overlays/game_ui/game_ui_store.dart';
 
 class CobrasEscadas extends FlameGame with HasTappables {
   final GameStore gameStore = sl();
+  // Mapa contendo a cabeca e a calda das cobras
+  final Map<int, int> snakeHeadMap = {16: 6, 49: 11, 46: 25, 62: 19, 64: 60, 74: 53, 89: 68, 92: 88, 95: 75, 99: 80};
+  final Map<int, int> laddersMap = {2: 38, 7: 14, 8: 31, 15: 26, 21: 42, 28: 84, 36: 44, 51: 67, 78: 98, 71: 91, 87: 94};
   Vector2 boardSteps = Vector2(0, 0);
   Vector2 boardZeros = Vector2(0, 0);
 
@@ -49,6 +52,8 @@ class CobrasEscadas extends FlameGame with HasTappables {
 
   Future<void> jogar(int dado1, int dado2) async {
     overlays.remove('roll_dices_screen');
+    dado1 = 7;
+    dado2 = 0;
     // A proxima posicao
     int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
     final nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
@@ -79,6 +84,26 @@ class CobrasEscadas extends FlameGame with HasTappables {
       gameStore.setBluePlayerPosition(nextPosition);
     } else {
       gameStore.setRedPlayerPosition(nextPosition);
+    }
+    // Checa se encontrou a cabeca de uma cobra
+    if (snakeHeadMap.containsKey(nextPosition)) {
+      if (gameStore.state.isBlueTurn) {
+        gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
+        gameStore.setBluePlayerPosition(snakeHeadMap[nextPosition]!);
+      } else {
+        gameStore.avatarRed.add(MoveEffect.to(boardToPosition(snakeHeadMap[nextPosition]!), EffectController(duration: 1)));
+        gameStore.setRedPlayerPosition(snakeHeadMap[nextPosition]!);
+      }
+    }
+    // Checa se encontrou a base de uma escada
+    if (laddersMap.containsKey(nextPosition)) {
+      if (gameStore.state.isBlueTurn) {
+        gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
+        gameStore.setBluePlayerPosition(laddersMap[nextPosition]!);
+      } else {
+        gameStore.avatarRed.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
+        gameStore.setRedPlayerPosition(laddersMap[nextPosition]!);
+      }
     }
     // Ajusta os avatares se os dois jogadores estiverem na msm posicao
     if (gameStore.state.redPlayerPosition == gameStore.state.bluePlayerPosition) {
