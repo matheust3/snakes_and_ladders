@@ -52,7 +52,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
   }
 
   Future<void> jogar(int dado1, int dado2) async {
-    // dado1 = 7;
+    // dado1 = 100;
     // dado2 = 0;
     if (gameStore.state.movingAvatar) return;
     gameStore.setMovingAvatar(true);
@@ -132,6 +132,10 @@ class CobrasEscadas extends FlameGame with HasTappables {
     } else {
       sl<GameUiStore>().setRedPosition(gameStore.state.redPlayerPosition);
     }
+
+    if (gameStore.state.bluePlayerPosition == 100 || gameStore.state.redPlayerPosition == 100) {
+      await sl<AlertScreenStore>().showWinMessage(true);
+    } else
     // Se os dados forem nao forem iguais, passa vez
     if (dado1 != dado2) {
       gameStore.setBlueTurn(!gameStore.state.isBlueTurn);

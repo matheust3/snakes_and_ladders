@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snakes_and_ladders/core/failures.dart';
 import 'package:flutter_snakes_and_ladders/core/injection_container.dart';
+import 'package:flutter_snakes_and_ladders/game/game_store.dart';
 import 'package:flutter_snakes_and_ladders/overlays/alert_screen/alert_screen_store.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
@@ -87,6 +88,40 @@ class _AlertScreenState extends State<AlertScreen> {
                     child: ElevatedButton(
                       child: const Text('Subir escadas'),
                       onPressed: () => store.showLadderMessage(false),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (state.showWinMessage) {
+          return Container(
+            color: Colors.black87,
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        sl<GameStore>().state.bluePlayerPosition == 100 ? 'Azul' : 'Vermelho',
+                        style: TextStyle(
+                          color: sl<GameStore>().state.bluePlayerPosition == 100 ? Colors.blue : Colors.red,
+                          fontSize: 30,
+                        ),
+                      ),
+                      const Text('Você venceu, parabéns!!!!'),
+                    ],
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 70,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Continuar'),
+                      onPressed: () => store.showWinMessage(false),
                     ),
                   ),
                 ),

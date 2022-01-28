@@ -19,6 +19,13 @@ class AlertScreenStore extends NotifierStore<Failure, AlertScreenState> {
     }
   }
 
+  Future<void> showWinMessage(bool show) async {
+    update(state.copyWith(showWinMessage: show));
+    while (state.showWinMessage) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+  }
+
   Future<void> showLadderMessage(bool show) async {
     update(state.copyWith(showLadderMessage: show));
     while (state.showLadderMessage) {
