@@ -35,7 +35,6 @@ class RollDiceScreenStore extends NotifierStore<Failure, RollDiceScreenState> {
 
   Future<void> showDices() async {
     _getDicesValues();
-    update(state.copyWith(diceValue1: 2, diceValue2: 2));
     if (state.diceValue1 == state.diceValue2) {
       update(state.copyWith(rollDices: false, showDices: false, showSameDicesMessage: true));
     } else {

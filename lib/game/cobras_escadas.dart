@@ -51,6 +51,8 @@ class CobrasEscadas extends FlameGame with HasTappables {
   }
 
   Future<void> jogar(int dado1, int dado2) async {
+    if (gameStore.state.movingAvatar) return;
+    gameStore.setMovingAvatar(true);
     overlays.remove('roll_dices_screen');
     // A proxima posicao
     int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
@@ -130,6 +132,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
       gameStore.setBlueTurn(!gameStore.state.isBlueTurn);
       sl<GameUiStore>().setBlueTurn(gameStore.state.isBlueTurn);
     }
+    gameStore.setMovingAvatar(false);
   }
 
   Vector2 boardToPosition(int boardPosition) {

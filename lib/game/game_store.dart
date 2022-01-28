@@ -9,7 +9,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 part 'game_state.dart';
 
 class GameStore extends NotifierStore<Failure, GameState> {
-  GameStore() : super(const GameState(bluePlayerPosition: 0, redPlayerPosition: 0, isBlueTurn: true));
+  GameStore() : super(const GameState(bluePlayerPosition: 0, movingAvatar: false, redPlayerPosition: 0, isBlueTurn: true));
 
   late final CobrasEscadas game;
   late final SpriteComponent avatarRed;
@@ -19,6 +19,7 @@ class GameStore extends NotifierStore<Failure, GameState> {
   void setRedPlayerPosition(int pos) => update(state.copyWith(redPlayerPosition: pos));
 
   void setBlueTurn(bool v) => update(state.copyWith(isBlueTurn: v));
+  void setMovingAvatar(bool moving) => update(state.copyWith(movingAvatar: moving));
 
   Future<void> play() async {
     final dice1 = sl<RollDiceScreenStore>().state.diceValue1;
