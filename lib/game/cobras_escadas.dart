@@ -84,14 +84,14 @@ class CobrasEscadas extends FlameGame with HasTappables {
         }
         if (gameStore.state.isBlueTurn) {
           sl<GameUiStore>().setBluePosition(currentPosition);
-          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
+          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.5));
           gameStore.avatarBlue.add(jumpEffect);
         } else {
           sl<GameUiStore>().setRedPosition(currentPosition);
-          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
+          final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.5));
           gameStore.avatarRed.add(jumpEffect);
         }
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 800));
       }
       // Ajusta a posicao se ela for maior que 100
       if (nextPosition > 100) {
