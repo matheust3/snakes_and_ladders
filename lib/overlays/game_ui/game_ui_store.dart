@@ -19,6 +19,11 @@ class GameUiStore extends NotifierStore<Failure, GameUiState> {
 
   set game(CobrasEscadas g) => _game = g;
 
+  void setBluePosition(int pos) => update(state.copyWith(bluePosition: pos));
+  void setRedPosition(int pos) => update(state.copyWith(redPosition: pos));
+
+  void setBlueTurn(bool turn) => update(state.copyWith(isBlueTurn: turn));
+
   Future<void> play() async {
     _game.overlays.add('roll_dices_screen');
     await rollDiceScreenStore.rollDices();

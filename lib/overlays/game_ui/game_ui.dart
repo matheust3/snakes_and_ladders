@@ -26,36 +26,34 @@ class GameUi extends StatelessWidget {
         store: sl<GameUiStore>(),
         onState: (context, state) => Stack(
           children: [
-            if (state.isBlueTurn)
-              AnimatedBuilder(
-                animation: arrowAnimationController,
-                builder: (context, _) {
-                  return AnimatedPositioned(
-                      child: const Icon(
-                        Icons.arrow_left_outlined,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      top: ((game.size.y * 0.3 - 40) / 2) + game.size.y * 0.7 + 20,
-                      left: arrowAnimationController.position,
-                      duration: arrowAnimationController.animationDuration);
-                },
-              ),
-            if (!state.isBlueTurn)
-              AnimatedBuilder(
-                animation: arrowAnimationController,
-                builder: (context, _) {
-                  return AnimatedPositioned(
-                      child: const Icon(
-                        Icons.arrow_right_outlined,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      top: ((game.size.y * 0.3 - 40) / 2) + game.size.y * 0.7 + 20,
-                      right: arrowAnimationController.position,
-                      duration: arrowAnimationController.animationDuration);
-                },
-              ),
+            AnimatedBuilder(
+              animation: arrowAnimationController,
+              builder: (context, _) {
+                return AnimatedPositioned(
+                    child: Icon(
+                      Icons.arrow_left_outlined,
+                      color: state.isBlueTurn ? Colors.white : Colors.transparent,
+                      size: 40,
+                    ),
+                    top: ((game.size.y * 0.3 - 40) / 2) + game.size.y * 0.7 + 20,
+                    left: arrowAnimationController.position,
+                    duration: arrowAnimationController.animationDuration);
+              },
+            ),
+            AnimatedBuilder(
+              animation: arrowAnimationController,
+              builder: (context, _) {
+                return AnimatedPositioned(
+                    child: Icon(
+                      Icons.arrow_right_outlined,
+                      color: state.isBlueTurn ? Colors.transparent : Colors.white,
+                      size: 40,
+                    ),
+                    top: ((game.size.y * 0.3 - 40) / 2) + game.size.y * 0.7 + 20,
+                    right: arrowAnimationController.position,
+                    duration: arrowAnimationController.animationDuration);
+              },
+            ),
             Positioned.fill(
               top: ((game.size.y * 0.3 - 40) / 2) + game.size.y * 0.7,
               child: Align(
@@ -84,6 +82,7 @@ class GameUi extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 15),
+                              primary: state.isBlueTurn ? Colors.blue : Colors.red,
                             ),
                             onPressed: () => sl<GameUiStore>().play(),
                             child: Image.asset(

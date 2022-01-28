@@ -69,9 +69,11 @@ class CobrasEscadas extends FlameGame with HasTappables {
     // Move o avatar do jogador, casa por casa
     for (int i = lastPosition + 1; i <= nextPosition; i++) {
       if (gameStore.state.isBlueTurn) {
+        sl<GameUiStore>().setBluePosition(i);
         final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(i), -boardSteps.y, EffectController(duration: 0.7));
         gameStore.avatarBlue.add(jumpEffect);
       } else {
+        sl<GameUiStore>().setRedPosition(i);
         final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(i), -boardSteps.y, EffectController(duration: 0.7));
         gameStore.avatarRed.add(jumpEffect);
       }
@@ -109,9 +111,16 @@ class CobrasEscadas extends FlameGame with HasTappables {
       gameStore.avatarBlue.add(MoveEffect.to(gameStore.avatarBlue.position - (boardSteps / 4), EffectController(duration: 0.7)));
       await Future.delayed(const Duration(seconds: 1));
     }
+    // Seta a posicao final (pode ter subido uma escada ou engolido por uma cobra)
+    if (gameStore.state.isBlueTurn) {
+      sl<GameUiStore>().setBluePosition(gameStore.state.bluePlayerPosition);
+    } else {
+      sl<GameUiStore>().setRedPosition(gameStore.state.redPlayerPosition);
+    }
     // Se os dados forem nao forem iguais, passa vez
     if (dado1 != dado2) {
       gameStore.setBlueTurn(!gameStore.state.isBlueTurn);
+      sl<GameUiStore>().setBlueTurn(gameStore.state.isBlueTurn);
     }
   }
 
