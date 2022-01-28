@@ -7,7 +7,12 @@ import 'package:flutter_triple/flutter_triple.dart';
 part 'game_ui_state.dart';
 
 class GameUiStore extends NotifierStore<Failure, GameUiState> {
-  GameUiStore({required this.rollDiceScreenStore}) : super(GameUiState());
+  GameUiStore({required this.rollDiceScreenStore})
+      : super(const GameUiState(
+          bluePosition: 0,
+          isBlueTurn: true,
+          redPosition: 0,
+        ));
 
   final RollDiceScreenStore rollDiceScreenStore;
   late final CobrasEscadas _game;
