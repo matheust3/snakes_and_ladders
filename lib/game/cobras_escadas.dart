@@ -54,7 +54,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
     overlays.remove('roll_dices_screen');
     // A proxima posicao
     int lastPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition : gameStore.state.redPlayerPosition;
-    final nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
+    int nextPosition = gameStore.state.isBlueTurn ? gameStore.state.bluePlayerPosition + dado1 + dado2 : gameStore.state.redPlayerPosition + dado1 + dado2;
     // Spawna o avatar do jogado se ele esta na posicao zero
     if (dado1 + dado2 == nextPosition) {
       lastPosition = 1;
@@ -68,16 +68,24 @@ class CobrasEscadas extends FlameGame with HasTappables {
     }
     // Move o avatar do jogador, casa por casa
     for (int i = lastPosition + 1; i <= nextPosition; i++) {
+      int currentPosition = i;
+      if (currentPosition > 100) {
+        currentPosition = 100 - (currentPosition - 100);
+      }
       if (gameStore.state.isBlueTurn) {
-        sl<GameUiStore>().setBluePosition(i);
-        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(i), -boardSteps.y, EffectController(duration: 0.7));
+        sl<GameUiStore>().setBluePosition(currentPosition);
+        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarBlue.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
         gameStore.avatarBlue.add(jumpEffect);
       } else {
-        sl<GameUiStore>().setRedPosition(i);
-        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(i), -boardSteps.y, EffectController(duration: 0.7));
+        sl<GameUiStore>().setRedPosition(currentPosition);
+        final JumpEffect jumpEffect = JumpEffect(gameStore.avatarRed.position, boardToPosition(currentPosition), -boardSteps.y, EffectController(duration: 0.7));
         gameStore.avatarRed.add(jumpEffect);
       }
       await Future.delayed(const Duration(seconds: 1));
+    }
+    // Ajusta a posicao se ela for maior que 100
+    if (nextPosition > 100) {
+      nextPosition = 100 - (nextPosition - 100);
     }
     // Salva a posicao do jogador
     if (gameStore.state.isBlueTurn) {
