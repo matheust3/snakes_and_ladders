@@ -46,10 +46,22 @@ class _RollDiceScreenState extends State<RollDiceScreen> {
             );
           } else if (state.showDices) {
             return Center(
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Flexible(child: Image.asset('assets/images/dice_${state.diceValue1}.png')),
-                  Flexible(child: Image.asset('assets/images/dice_${state.diceValue2}.png')),
+                  Row(
+                    children: [
+                      Flexible(child: Image.asset('assets/images/dice_${state.diceValue1}.png')),
+                      Flexible(child: Image.asset('assets/images/dice_${state.diceValue2}.png')),
+                    ],
+                  ),
+                  Text(
+                    '+${state.diceValue1 + state.diceValue2}',
+                    style: const TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             );

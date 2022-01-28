@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snakes_and_ladders/core/injection_container.dart';
-
-import 'package:flutter_snakes_and_ladders/main.dart';
+import 'package:flutter_snakes_and_ladders/game/cobras_escadas.dart';
 
 import 'game_ui_store.dart';
 

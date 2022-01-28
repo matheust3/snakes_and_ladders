@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
@@ -5,6 +6,8 @@ import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter_snakes_and_ladders/core/failures.dart';
+import 'package:flutter_snakes_and_ladders/core/injection_container.dart';
+import 'package:flutter_snakes_and_ladders/game/game_store.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 part 'roll_dice_screen_state.dart';
@@ -34,6 +37,8 @@ class RollDiceScreenStore extends NotifierStore<Failure, RollDiceScreenState> {
   Future<void> showDices() async {
     _getDicesValues();
     update(state.copyWith(rollDices: false, showDices: true));
+    await Future.delayed(const Duration(seconds: 2));
+    sl<GameStore>().play();
   }
 
   // Randomly set values ​​for indices

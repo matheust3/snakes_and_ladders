@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_snakes_and_ladders/core/failures.dart';
-import 'package:flutter_snakes_and_ladders/main.dart';
+import 'package:flutter_snakes_and_ladders/game/cobras_escadas.dart';
 import 'package:flutter_snakes_and_ladders/overlays/roll_dice_screen/roll_dice_screen_store.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 part 'game_ui_state.dart';
 
 class GameUiStore extends NotifierStore<Failure, GameUiState> {
-  GameUiStore({required this.rollDiceScreenStore}) : super(const GameUiState(jogar: null));
+  GameUiStore({required this.rollDiceScreenStore}) : super(GameUiState());
 
   final RollDiceScreenStore rollDiceScreenStore;
   late final CobrasEscadas _game;
@@ -17,6 +17,5 @@ class GameUiStore extends NotifierStore<Failure, GameUiState> {
   Future<void> play() async {
     _game.overlays.add('roll_dices_screen');
     await rollDiceScreenStore.rollDices();
-    await Future.delayed(const Duration(seconds: 3), () => _game.overlays.remove('roll_dices_screen'));
   }
 }
