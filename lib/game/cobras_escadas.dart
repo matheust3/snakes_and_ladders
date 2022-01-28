@@ -52,8 +52,8 @@ class CobrasEscadas extends FlameGame with HasTappables {
   }
 
   Future<void> jogar(int dado1, int dado2) async {
-    dado1 = 16;
-    dado2 = 0;
+    // dado1 = 7;
+    // dado2 = 0;
     if (gameStore.state.movingAvatar) return;
     gameStore.setMovingAvatar(true);
     overlays.remove('roll_dices_screen');
@@ -111,6 +111,7 @@ class CobrasEscadas extends FlameGame with HasTappables {
     }
     // Checa se encontrou a base de uma escada
     if (laddersMap.containsKey(nextPosition)) {
+      await sl<AlertScreenStore>().showLadderMessage(true);
       if (gameStore.state.isBlueTurn) {
         gameStore.avatarBlue.add(MoveEffect.to(boardToPosition(laddersMap[nextPosition]!), EffectController(duration: 1)));
         gameStore.setBluePlayerPosition(laddersMap[nextPosition]!);

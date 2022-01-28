@@ -59,6 +59,40 @@ class _AlertScreenState extends State<AlertScreen> {
               ],
             ),
           );
+        } else if (state.showLadderMessage) {
+          return Container(
+            color: Colors.black87,
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Uma escada?',
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 30,
+                        ),
+                      ),
+                      Text('Para onde ela vai leva?'),
+                    ],
+                  ),
+                ),
+                Positioned.fill(
+                  bottom: 70,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      child: const Text('Subir escadas'),
+                      onPressed: () => store.showLadderMessage(false),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         } else {
           return Container();
         }
