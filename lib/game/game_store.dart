@@ -15,6 +15,9 @@ class GameStore extends NotifierStore<Failure, GameState> {
   late final SpriteComponent avatarRed;
   late final SpriteComponent avatarBlue;
 
+  void setBluePlayerPosition(int pos) => update(state.copyWith(bluePlayerPosition: pos));
+  void setRedPlayerPosition(int pos) => update(state.copyWith(redPlayerPosition: pos));
+
   Future<void> play() async {
     final dice1 = sl<RollDiceScreenStore>().state.diceValue1;
     final dice2 = sl<RollDiceScreenStore>().state.diceValue2;
